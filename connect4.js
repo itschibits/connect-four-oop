@@ -6,7 +6,7 @@
  */
 
 class Game {
-  constructor(WIDTH, HEIGHT){
+  constructor(WIDTH = 7, HEIGHT = 6){
     this.WIDTH = WIDTH;
     this.HEIGHT = HEIGHT;
     this.board = [];
@@ -16,12 +16,18 @@ class Game {
     this.makeHtmlBoard();
   }
 
+  /** makeBoard: create in-JS board structure:
+ *   board = array of rows, each row is array of cells  (board[y][x])
+ */
+
   makeBoard() {
     for (let y = 0; y < this.HEIGHT; y++) {
       this.board.push(Array.from({ length: this.WIDTH }));
-      console.log("makeboard" + this.board);
+      console.log("makeboard", this.board);
     }
   }
+
+  /** makeHtmlBoard: make HTML table and row of column tops. */
 
   makeHtmlBoard() {
     const board = document.getElementById('board');
@@ -55,6 +61,8 @@ class Game {
     }
   }
 
+  /** findSpotForCol: given column x, return top empty y (null if filled) */
+
   findSpotForCol(x) {
     for (let y = this.HEIGHT - 1; y >= 0; y--) {
       if (!this.board[y][x]) {
@@ -63,6 +71,8 @@ class Game {
     }
     return null;
   }
+
+  /** placeInTable: update DOM to place piece into HTML table of board */
 
   placeInTable(y, x) {
     const piece = document.createElement('div');
@@ -74,16 +84,18 @@ class Game {
     spot.append(piece);
   }
 
+/** endGame: announce game end */
+
   endGame(msg) {
     alert(msg);
   }
 
-  //check back w/ createhtmlboard
+  /** handleClick: handle click of column top to play piece */
   handleClick(evt) {
     // get x from ID of clicked cell
     const x = +evt.target.id;
     // get next spot in column (if none, ignore click)
-    console.log("findspotforcol ", this)
+    console.log("findspotforcol ", this);
     const y = this.findSpotForCol(x);
     if (y === null) {
       return;
@@ -106,6 +118,8 @@ class Game {
     // switch players
     this.currPlayer = this.currPlayer === 1 ? 2 : 1;
   }
+
+  /** checkForWin: check board cell-by-cell for "does a win start here?" */
 
   checkForWin() {
     let _win = cells => cells.every(
